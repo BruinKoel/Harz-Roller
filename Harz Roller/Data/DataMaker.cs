@@ -23,8 +23,8 @@ namespace Harz_Roller.Data
     {
         public struct TrainingSet
         {
-            public float[,,] inputField;
-            public float[] outputField;
+            public float[][] inputField;
+            public float[][] outputField;
         }
 
         public string dataDir;
@@ -56,38 +56,28 @@ namespace Harz_Roller.Data
         
         public TrainingSet generateTrainingSet( int size, Random random)
         {
+            float[][] bigCSV = File.ReadAllLines(convertedDataFile)
+                .Skip(2).Select(x => x.Split(',').Select(x => float.Parse(x)).ToArray()).ToArray();
             int inputSize = 2048;
-            int outputSize = 1;//CAN'T BE ANYTHING ELSE
-            int outputRange = 512;//timeframe it should predict ahead in terms of datapoints
+            int outputSize = 10;//
+            
             
             int index = 0;
 
+            float[][] inputField = new float[size*128][];
+            float[][] outputField = new float[size*128][];
 
-            int[] columnOrder = { 1, 2, 3, 4, 5, 12 };//which orders should be take for the inputfield
-
-            float[,,] inputField = new float[size, inputSize, 6];
-            float[] outputField = new float[size];
-
-            string[] data = File.ReadAllLines(convertedDataFile);
-            string line = "";
-            for (int i = 0; i < size; i++)
+            
+           
+            for (int o = 0; o < size; o++)
             {
-                if ((i % 256) == 0) Console.WriteLine("{2}% Batched {0} out of {1}", i, size, i*100/size);
-                index = random.Next(data.Length - inputSize - outputSize - outputRange);
-                for (int o = 0; o < inputSize; o++)
+                index = random.Next(inputSize, bigCSV.GetLength(0));
+               for(int i = 0; i < 128; i++)
                 {
-                    for (int u = 0; u < columnOrder.Length; u++)
-                    {
-                        inputField[i, o, u] = float.Parse(data[index + o + 1].Split(',')[columnOrder[u]]);
-                    }
-                    
+                    inputField[o * 128 + i] = bigCSV[index + i][0..5];
+                    outputField[o * 128 + i] = bigCSV[index + i][6..16];
                 }
-                outputField[i] = 1;
-                for (int o = 0; o < outputRange; o++)
-                {
-                    outputField[i] *=  (1 -float.Parse(data[index + o + 1 + inputSize].Split(',')[13]));
-                }
-                outputField[i] = 1 -outputField[i];
+                Console.WriteLine("{0}%  batched {1} out of {2}", (o / size) * 100, o * 128, size * 128);
 
             }
             Console.WriteLine("PROCESSED OK! \r\n");

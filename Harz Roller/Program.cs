@@ -13,7 +13,7 @@ namespace Harz_Roller
             Data.DataMaker dataMaker = new Data.DataMaker(@"D:\Daan Games\Visual projects\Harz Roller\Harz Roller\bin\Debug\netcoreapp3.1\BinanceHistoricalData\ETHUSDT\1m\csv");
             //dataMaker.stitchCSV();
             Models.ModelMaker model = new Models.ModelMaker(dataMaker);
-            model.PrepareData();
+            model.PrepareData(true);
             model.Run();
             
             

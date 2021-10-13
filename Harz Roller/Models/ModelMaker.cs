@@ -224,8 +224,7 @@ namespace Harz_Roller.Models
                 dataMaker.convertCSV();
             }
 
-            float[][] bigCSV = File.ReadAllLines(dataFile)
-                .Skip(2).Select(x => x.Split(',').Select(x => float.Parse(x)).ToArray()).ToArray();
+            
 
 
             Data.DataMaker.TrainingSet training = dataMaker.generateTrainingSet(trainSize, new Random());

@@ -12,7 +12,7 @@ namespace Harz_Roller.Data
         public Calculator(float[][] dataPlane, int pointer = 0)
         {
             this.dataPlane = dataPlane;
-            this.pointer = pointer;
+            this.pointer = pointer; 
         }
         /// <summary>
         /// 
@@ -36,7 +36,7 @@ namespace Harz_Roller.Data
 
             if (step) pointer++;
             return temp;
-        }
+        }   
         public bool[] isValley(int[] timeFrames, int column, bool step = true)
         {
             bool[] temp = new bool[timeFrames.Length];
